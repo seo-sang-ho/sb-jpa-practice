@@ -1,12 +1,12 @@
-package com.ll.sbJPApractice.domain.member.member.service;
+package com.ll.sbJPApractice.domain.domain.article.aritcle.service;
 
-import com.ll.sbJPApractice.domain.member.member.entity.Member;
+import com.ll.sbJPApractice.domain.article.article.entitry.Article;
+import com.ll.sbJPApractice.domain.article.article.service.ArticleService;
 import com.ll.sbJPApractice.global.rsData.RsData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,16 +15,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-@Rollback(value = false)
-public class MemberServiceTest {
+public class ArticleServiceTest {
     @Autowired
-    private MemberService memberService;
+    private ArticleService articleService;
 
     @Test
-    @DisplayName("회원가입")
+    @DisplayName("글쓰기")
     void t1(){
-        RsData<Member> user = memberService.join("userNew", "1234");
-        Member member = user.getData();
-        assertThat(member.getId()).isGreaterThan(0L);
+        RsData<Article> writeRs = articleService.write("제목1", "내용1");
+        Article article = writeRs.getData();
+        assertThat(article.getId()).isGreaterThan(0L);
     }
 }
