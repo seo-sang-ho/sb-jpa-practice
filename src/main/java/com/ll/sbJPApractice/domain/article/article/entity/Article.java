@@ -1,4 +1,4 @@
-package com.ll.sbJPApractice.domain.article.article.entitry;
+package com.ll.sbJPApractice.domain.article.article.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,6 +20,7 @@ public class Article {
     @GeneratedValue(strategy = IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
+    private long authorId;
     private String title;
     private String body;
 }
