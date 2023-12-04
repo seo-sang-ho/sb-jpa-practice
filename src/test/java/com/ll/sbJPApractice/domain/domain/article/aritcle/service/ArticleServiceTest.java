@@ -3,7 +3,6 @@ package com.ll.sbJPApractice.domain.domain.article.aritcle.service;
 import com.ll.sbJPApractice.domain.article.article.entity.Article;
 import com.ll.sbJPApractice.domain.article.article.service.ArticleService;
 import com.ll.sbJPApractice.domain.article.articleComment.entity.ArticleComment;
-import com.ll.sbJPApractice.domain.article.articleComment.service.ArticleCommentService;
 import com.ll.sbJPApractice.domain.member.member.entity.Member;
 import com.ll.sbJPApractice.domain.member.member.service.MemberService;
 import com.ll.sbJPApractice.global.rsData.RsData;
@@ -12,9 +11,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,8 +26,6 @@ public class ArticleServiceTest {
     private ArticleService articleService;
     @Autowired
     private MemberService memberService;
-    @Autowired
-    private ArticleCommentService articleCommentService;
 
     @Test
     @DisplayName("글쓰기")
@@ -68,30 +66,39 @@ public class ArticleServiceTest {
 
     @Test
     @DisplayName("1번글의 댓글들을 수정한다.")
-    @Rollback(value = false)
     void t5() {
-        ArticleComment comment = articleCommentService.findLastest().get();
+        Article article1 = articleService.findById(1L).get();
 
-        articleCommentService.modify(comment,"new body");
+        article1.getComments().getLast().setBody("수정된 댓글");
 
     }
 
     @Test
-    @DisplayName("1번글의 댓글을 삭제한다.")
-    @Rollback(value = false)
+    @DisplayName("1번글의 댓글 중 마지막 것을 삭제한다.")
     void t6() {
-        ArticleComment comment = articleCommentService.findFirstByArticleIdOrderByDesc(1L).get();
+        Article article = articleService.findById(1L).get();
 
-        articleCommentService.delete(comment);
+        ArticleComment lastComment = article.getComments().getLast();
+        article.removeComment(lastComment);
     }
 
     @Test
     @DisplayName("2번글에 댓글 추가한다.")
-    @Rollback(value = false)
     void t7() {
         Member member1 = memberService.findById(1L).get();
         Article article = articleService.findById(2L).get();
 
-        articleCommentService.write(member1,article,"댓글1");
+        article.addComment(member1,"댓글1");
+    }
+
+    @Test
+    @DisplayName("게시물 별 댓글 수 출력")
+    void t8(){
+        List<Article> articles = articleService.findAll();
+
+        articles.forEach(article -> {
+            System.out.println("게시물 번호: " + article.getId());
+            System.out.println("댓글 수: " + article.getComments().size());
+        });
     }
 }
