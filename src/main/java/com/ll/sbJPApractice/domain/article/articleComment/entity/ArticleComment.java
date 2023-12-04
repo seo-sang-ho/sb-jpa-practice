@@ -1,5 +1,6 @@
-package com.ll.sbJPApractice.domain.article.article.entity;
+package com.ll.sbJPApractice.domain.article.articleComment.entity;
 
+import com.ll.sbJPApractice.domain.article.article.entity.Article;
 import com.ll.sbJPApractice.domain.member.member.entity.Member;
 import com.ll.sbJPApractice.global.jpa.baseEntity;
 import jakarta.persistence.Entity;
@@ -17,9 +18,11 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public class Article extends baseEntity {
+public class ArticleComment extends baseEntity {
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Article article;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member author;
-    private String title;
     private String body;
+
 }

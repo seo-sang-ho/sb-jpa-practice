@@ -2,11 +2,14 @@ package com.ll.sbJPApractice.domain.article.article.service;
 
 import com.ll.sbJPApractice.domain.article.article.entity.Article;
 import com.ll.sbJPApractice.domain.article.article.repository.ArticleRepository;
+import com.ll.sbJPApractice.domain.article.articleComment.entity.ArticleComment;
+import com.ll.sbJPApractice.domain.member.member.entity.Member;
 import com.ll.sbJPApractice.global.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -19,7 +22,8 @@ public class ArticleService {
     @Transactional(readOnly = true)
     public RsData<Article> write(long authorId, String title, String body) {
         Article article = Article.builder()
-                .authorId(authorId)
+                .author(Member.builder().id(authorId).build())
+                .modifyDate(LocalDateTime.now())
                 .title(title)
                 .body(body)
                 .build();
@@ -31,5 +35,16 @@ public class ArticleService {
 
     public Optional<Article> findById(long id) {
         return articleRepository.findById(id);
+    }
+
+    @Transactional
+    public void modify(Article article, String title, String body) {
+        article.setTitle(title);
+        article.setBody(body);
+    }
+
+    @Transactional
+    public void modifyComment(ArticleComment comment, String body) {
+        comment.setBody(body);
     }
 }
